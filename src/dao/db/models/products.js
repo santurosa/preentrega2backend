@@ -16,14 +16,22 @@ const productsSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    thumbnail: {
-        type: Array,
-        default: ["Sin imagenes"]
+    status: {
+        type: Boolean,
+        default: true
     },
     stock: {
         type: Number,
         required: true
     },
+    category: {
+        type: String,
+        required: true
+    },
+    thumbnail: {
+        type: Array,
+        default: ["Sin imagenes"]
+    }
 })
 
 export const productsModel = mongoose.model(productCollection, productsSchema);

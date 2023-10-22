@@ -1,13 +1,11 @@
 import { productsModel } from "../dao/db/models/products.js";
 
 export default class Products {
-    contructor() {
-    }
-
+    
     getProducts = async () => {
         try {
-            const users = await productsModel.find()
-            return users.map(product => product.toObject());
+            const result = await productsModel.find()
+            return result.map(product => product.toObject());
         } catch (error) {
             throw error;
         }

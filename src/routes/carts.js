@@ -15,18 +15,16 @@ router.get("/api/carts/:cid", async (req, res) => {
     }
 })
 
-router.post("/api/carts/:pid", async (req, res) => {
+router.post("/api/carts", async (req, res) => {
     try {
-        const pid = req.params.pid;
-
-        const result = await cartsManager.saveCart(pid);
+        const result = await cartsManager.createCart();
         res.send({ status: "success", payload: result });
     } catch (error) {
         res.status(500).send({ status: "error", error });
     }
 })
 
-router.put("/api/carts/:cid/product/:pid", async (req, res) => {
+router.post("/api/carts/:cid/product/:pid", async (req, res) => {
     try {
         const cid = req.params.cid;
         const pid = req.params.pid;

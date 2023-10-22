@@ -13,8 +13,6 @@ router.get("/api/products", async (req, res) => {
     limit = limit || 10;
     page = page || 1;
 
-    console.log(limit)
-
     try {
         let result = await productManager.getProducts();
         result = await productManager.limit(limit);
@@ -51,23 +49,23 @@ router.post("/api/products", async (req, res) => {
     }
 })
 
-router.delete("/api/products/:pid", async (req, res) => {
-    try {
-        const pid = req.params.pid;
-
-        const result = await productManager.deleteProduct(pid);
-        res.send({ status: "success", payload: result });
-    } catch (error) {
-        res.status(500).send({ status: "error", error });
-    }
-})
-
 router.put("/api/products/:pid", async (req, res) => {
     try {
         const pid = req.params.pid;
         const upgrate = req.body;
 
         const result = await productManager.upgrateProduct(pid, upgrate);
+        res.send({ status: "success", payload: result });
+    } catch (error) {
+        res.status(500).send({ status: "error", error });
+    }
+})
+
+router.delete("/api/products/:pid", async (req, res) => {
+    try {
+        const pid = req.params.pid;
+
+        const result = await productManager.deleteProduct(pid);
         res.send({ status: "success", payload: result });
     } catch (error) {
         res.status(500).send({ status: "error", error });
