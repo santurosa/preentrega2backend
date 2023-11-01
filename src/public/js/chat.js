@@ -1,7 +1,6 @@
 const socket = io();
 
 let user;
-let apiRequestCompleted = false;
 let chatBox = document.getElementById('chatBox');
 let log = document.getElementById('messageLogs');
 
@@ -16,29 +15,13 @@ Swal.fire({
     }
   },
   allowOutsideClick: false,
-}).then((result) => {
-  if (result.isConfirmed) {
-    user = result.value;
-    socket.emit('authenticated', user);
-  }
-
-  if (!apiRequestCompleted) {
-    fetch('/api/messages')
-      .then(response => response.json())
-      .then(data => {
-        data.forEach(message => {
-          let messageElement = document.createElement('p');
-          messageElement.textContent = `${message.user} dice: ${message.message}`;
-          log.appendChild(messageElement);
-        });
-
-        return apiRequestCompleted = true;
-      })
-      .catch(error => {
-        console.error('Error al obtener los mensajes:', error);
-      });
-  }
-});
+})
+  .then((result) => {
+    if (result.isConfirmed) {
+      user = result.value;
+      socket.emit('authenticated', user);
+    }
+  });
 
 chatBox.addEventListener('keyup', evt => {
   if (evt.key === "Enter") {
@@ -67,12 +50,11 @@ chatBox.addEventListener('keyup', evt => {
 
 socket.on('messageLogs', data => {
   if (!user) return;
-
+  let messages = "";
   data.forEach(message => {
-    let messageElement = document.createElement('p');
-    messageElement.textContent = `${message.user} dice: ${message.message}`;
-    log.appendChild(messageElement);
-  });
+    messages = messages + `<li>${message.user} dice: ${message.message}</li>`
+  })
+  log.innerHTML = messages;
 });
 
 socket.on('newUserConnected', user => {

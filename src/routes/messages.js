@@ -1,12 +1,16 @@
 import { Router } from "express";
-import Messages from "../manager/messages.js";
+import Messages from "../dao/db/messages.js";
 
 const router = Router();
 const managerMessages = new Messages();
 
 router.get("/api/messages", async (req, res) => {
-    const messages = await managerMessages.getMessages();
-    res.send(messages);
+    try {
+        const messages = await managerMessages.getMessages();
+        res.send(messages);
+    } catch (error) {
+        res.status(500).send({ status: "error", error });
+    }
 })
 
 router.post("/api/messages", async (req, res) => {

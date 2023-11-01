@@ -1,27 +1,14 @@
 import { Router } from "express";
-import Products from "../manager/products.js";
+import Products from "../dao/db/products.js";
 
 const router = Router();
 const productManager = new Products();
 
 router.get("/api/products", async (req, res) => {
-    let limit = +req.query.limit;
-    let page = +req.query.page;
-    let sort = +req.query.sort;
-    let search = req.query.search;
-
-    limit = limit || 10;
-    page = page || 1;
-
     try {
-        let result = await productManager.getProducts();
-        result = await productManager.limit(limit);
-        
-        if(sort === 1 || sort === -1) {
-            result = await productManager.sortPrice(sort, limit)
-        };
-
-        res.send({ status: "success", payload: result });
+        const { limit = 10, page = 1, sort, title, category } = req.query;
+        const { products, hasPrevPage, hasNextPage, nextPage, prevPage } = await productManager.getProducts(limit, page, sort, title, category);        
+        res.send({ status: "success", payload: products, hasPrevPage, hasNextPage, nextPage, prevPage });
     } catch (error) {
         res.status(500).send({ status: "error", error });
     }

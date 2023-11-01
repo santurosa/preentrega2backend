@@ -1,12 +1,9 @@
-<h1>Carritos</h1>
-{{#each carts}}
+<h1>Carrito</h1>
 <div>
-    <h2>ID del carrito: {{this._id}}</h2>
-    <h3>Producto(s)</h3>
-    {{#each this.products}}
+    <h2>Producto(s)</h2>
+    {{#each cart.products}}
     <ul>
-        <li>{{this.product}} (Cantidad: {{this.quantity}})</li>
+        <li>{{this.product.title}} (Cantidad: {{this.quantity}})</li>
     </ul>
     {{/each}}
 </div>
-{{/each}}

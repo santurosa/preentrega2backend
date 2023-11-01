@@ -1,4 +1,4 @@
-import { messagesModel } from "../dao/db/models/messages.js";
+import { messagesModel } from "../../models/messages.js";
 
 export default class Messages {
     getMessages = async () => {

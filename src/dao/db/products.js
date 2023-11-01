@@ -1,35 +1,32 @@
-import { productsModel } from "../dao/db/models/products.js";
+import { productsModel } from "../../models/products.js";
 
 export default class Products {
-    
-    getProducts = async () => {
+
+    getProducts = async (limit, page, sort, title, category, stock) => {
         try {
-            const result = await productsModel.find()
-            return result.map(product => product.toObject());
+            const filter = {};
+
+            if (title) {
+                filter.title = { $regex: title, $options: "i" }
+            }
+
+            if (category) {
+                filter.category = { $regex: category, $options: "i" }
+            }
+
+            if (stock === "true") {
+                filter.stock = { $gt: 0 };
+            }
+
+            const sortNumber = sort === "asc" ? { price: 1 } : sort === "des" ? { price: -1 } : {};
+
+            const { docs, hasPrevPage, hasNextPage, nextPage, prevPage } = await productsModel.paginate(filter, { limit, page, sort: sortNumber });
+            const products = docs.map(product => product.toObject());
+            return { products, hasPrevPage, hasNextPage, nextPage, prevPage };
         } catch (error) {
+            console.log(error)
             throw error;
         }
-    }
-
-    sortPrice = async (sort, limit) => {
-        const filter = await productsModel.aggregate([
-            {
-                $sort: {price: sort}
-            },
-            {
-                $limit: limit
-            }
-        ]);
-        return filter;
-    }
-
-    limit = async (limit) => {
-        const filter = await productsModel.aggregate([
-            {
-                $limit: limit
-            }
-        ]);
-        return filter;
     }
 
     getProductById = async (idProduct) => {
